@@ -1,6 +1,7 @@
 package com.community.rest;
 
 
+import com.community.rest.event.BoardEventHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -64,7 +65,13 @@ public class DataRestApplication {
 
             return new InMemoryUserDetailsManager(userDetailsList);
         }
-
+        
+        
+        @Bean
+        public BoardEventHandler boardEventHandler() {
+            // 게시글 이벤트 핸들러 객체를 빈으로 등록하여, 이벤트 핸들러를 적용 시킴
+            return new BoardEventHandler();
+        }
     }
 
 }
