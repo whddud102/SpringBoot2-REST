@@ -1,4 +1,7 @@
 package com.community.rest.repository;
 
-public class UserRepository {
+import com.community.rest.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
 }
