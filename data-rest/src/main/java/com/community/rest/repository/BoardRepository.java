@@ -15,6 +15,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     
     
     @Override   // JpaRepository 인터페이스의 메서드를 오버라이딩
-    @PreAuthorize("hasRole('ROLE_ADMIN)")   // 저장 기능을 ADMIN 권한에만 허용        
+    @PreAuthorize("hasRole('ROLE_ADMIN')")   // 저장 기능을 ADMIN 권한에만 허용
     <S extends Board> S save(S entity);
 }

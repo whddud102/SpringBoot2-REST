@@ -56,13 +56,13 @@ public class DataRestApplication {
             User.UserBuilder comonUser = User.withUsername("commonUser").password("{noop}common").roles("USER");
 
             // havi 는 USER, ADMIN 권한을 가짐
-            User.UserBuilder havi = User.withUsername("havi").password("{noop}test").roles("USER, ADMIN");
+            User.UserBuilder havi = User.withUsername("havi").password("{noop}test").roles("USER", "ADMIN");
 
             List<UserDetails> userDetailsList = new ArrayList<>();
             userDetailsList.add(comonUser.build());
             userDetailsList.add(havi.build());
 
-            return new InMemoryUserDetailsManager();
+            return new InMemoryUserDetailsManager(userDetailsList);
         }
 
     }
