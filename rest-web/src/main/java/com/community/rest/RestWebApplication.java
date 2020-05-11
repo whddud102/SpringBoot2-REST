@@ -26,35 +26,26 @@ public class RestWebApplication {
     }
 
     @Configuration
-    @EnableGlobalMethodSecurity(prePostEnabled = true)
-    @EnableWebSecurity
+    @EnableGlobalMethodSecurity(prePostEnabled = true)  // @prePost 어노테이션 사용 허용
+    @EnableWebSecurity  // 웹용 시큐리티를 활성화
     static class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-        @Bean
-        InMemoryUserDetailsManager userDetailsManager() {
-            User.UserBuilder commonUser = User.withUsername("commonUser");
-            User.UserBuilder havi = User.withUsername("havi");
-
-            List<UserDetails> userDetailsList = new ArrayList<>();
-            userDetailsList.add(commonUser.password("{noop}common").roles("USER").build());
-            userDetailsList.add(havi.password("{noop}test").roles("USER", "ADMIN").build());
-
-            return new InMemoryUserDetailsManager(userDetailsList);
-        }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+            // CORS(교차 출처 자원 공유) 설정 - 다른 출처에서 API 서버에 자원 공유 요청 하는 것을 허용
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.addAllowedOrigin("*");
-            configuration.addAllowedMethod("*");
-            configuration.addAllowedHeader("*");
+            configuration.addAllowedOrigin("*");    // Origin을 모든 경로에 대해 허용
+            configuration.addAllowedMethod("*");    // Method를 모든 경로에 대해 허용
+            configuration.addAllowedHeader("*");    // Hader를 모든 경로에 대해 허용
+            
+            // ConfigurationSource 설정을 등록
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", configuration);
-
+            
             http.httpBasic()
                     .and().authorizeRequests()
-                    //.antMatchers(HttpMethod.POST, "/Boards/**").hasRole("ADMIN")
                     .anyRequest().permitAll()
+                    // 스프링 시큐리티에 설정 추가
                     .and().cors().configurationSource(source)
                     .and().csrf().disable();
         }
