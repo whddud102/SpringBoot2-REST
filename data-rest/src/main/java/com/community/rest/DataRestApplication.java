@@ -3,13 +3,20 @@ package com.community.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class DataRestApplication {
@@ -42,6 +49,22 @@ public class DataRestApplication {
                     .and().cors().configurationSource(source)
                     .and().csrf().disable();
         }
+
+        @Bean
+        InMemoryUserDetailsManager userDetailsManager() {
+            // 메서드 권한 제한 테스트에 사용할 유저 정보 2개를 추가
+            User.UserBuilder comonUser = User.withUsername("commonUser").password("{noop}common").roles("USER");
+
+            // havi 는 USER, ADMIN 권한을 가짐
+            User.UserBuilder havi = User.withUsername("havi").password("{noop}test").roles("USER, ADMIN");
+
+            List<UserDetails> userDetailsList = new ArrayList<>();
+            userDetailsList.add(comonUser.build());
+            userDetailsList.add(havi.build());
+
+            return new InMemoryUserDetailsManager();
+        }
+
     }
 
 }
